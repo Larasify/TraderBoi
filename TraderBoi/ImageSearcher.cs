@@ -11,6 +11,7 @@ namespace TraderBoi
 {
     class ImageSearcher
     {
+        //anan
         [DllImport(@"ImageSearchDLLx32.dll")]
         public static extern IntPtr ImageSearch(int x, int y, int right, int bottom, [MarshalAs(UnmanagedType.LPStr)]string imagePath);
 
