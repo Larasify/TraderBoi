@@ -33,7 +33,7 @@ namespace TraderBoi
                 {
                     if(i.Name == p.Name)
                     {
-                        Console.BackgroundColor = System.ConsoleColor.DarkRed;
+                        Console.BackgroundColor = System.ConsoleColor.DarkYellow;
                         Console.WriteLine(DateTime.Now.ToString("hh:mm:ss") + " " + p.Name + " removed from potential list because they are already invited.");
                         Console.BackgroundColor = System.ConsoleColor.Black;
                         potential.Remove(p);
@@ -42,7 +42,7 @@ namespace TraderBoi
                 }
                 if (90 < (DateTime.Now - p.MessageTime).TotalSeconds)
                 {
-                    Console.BackgroundColor = System.ConsoleColor.DarkRed;
+                    Console.BackgroundColor = System.ConsoleColor.DarkYellow;
                     Console.WriteLine(DateTime.Now.ToString("hh:mm:ss") + " "+p.Name+" removed from potential list because they have waited too long(90s).");
                     Console.BackgroundColor = System.ConsoleColor.Black;
                     potential.Remove(p);
@@ -53,7 +53,7 @@ namespace TraderBoi
                 {
                     if(r.MyCurrencyName == p.MyCurrencyName && r.TheirCurrencyName == p.TheirCurrencyName && r.Rate < (double) ((double) p.MyCurrencyAmount / (double) p.TheirCurrencyAmount))
                     {
-                        Console.BackgroundColor = System.ConsoleColor.DarkRed;
+                        Console.BackgroundColor = System.ConsoleColor.DarkYellow;
                         Console.WriteLine(DateTime.Now.ToString("hh:mm:ss") + " " + p.Name + " removed from potential list because they have altered the deal rate in a way that is bad for us.");
                         Console.BackgroundColor = System.ConsoleColor.Black;
                         potential.Remove(p);
@@ -64,7 +64,7 @@ namespace TraderBoi
                 {
                     if(c.CurrencyName == p.TheirCurrencyName && c.Limit < c.InStock + p.TheirCurrencyAmount)
                     {
-                        Console.BackgroundColor = System.ConsoleColor.DarkRed;
+                        Console.BackgroundColor = System.ConsoleColor.DarkYellow;
                         Console.WriteLine(DateTime.Now.ToString("hh:mm:ss") + " " + p.Name + " removed from potential list because we are at our "+ c.CurrencyName+" limit");
                         Console.BackgroundColor = System.ConsoleColor.Black;
                         potential.Remove(p);
@@ -72,7 +72,7 @@ namespace TraderBoi
                     }
                     if(c.CurrencyName == p.MyCurrencyName && c.InStock < p.MyCurrencyAmount)
                     {
-                        Console.BackgroundColor = System.ConsoleColor.DarkRed;
+                        Console.BackgroundColor = System.ConsoleColor.DarkYellow;
                         Console.WriteLine(DateTime.Now.ToString("hh:mm:ss") + " " + p.Name + " removed from potential list because we are out of stock on " + c.CurrencyName);
                         Console.BackgroundColor = System.ConsoleColor.Black;
                         potential.Remove(p);

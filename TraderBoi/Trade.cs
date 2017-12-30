@@ -124,6 +124,8 @@ namespace TraderBoi
                     TheirIngameName = c.IngameName;
                 }
             }
+
+            CancelAllIncomingTrades();
             // PUT MY SHIT
             for (int i = 0; i < 12; i++)
             {
