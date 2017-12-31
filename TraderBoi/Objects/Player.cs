@@ -18,6 +18,7 @@ namespace TraderBoi
         public DateTime ZoneJoinTime;
         public Boolean InZone;
         public Boolean TradeCompleted;
+        public int AmountOfTimesTradeCancelled = 0;
         public double Profit=0;
 
         public Player(string name, string theirCurrencyName, string myCurrencyName, int theirCurrencyAmount, int myCurrencyAmount, DateTime messageTime)

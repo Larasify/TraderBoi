@@ -44,10 +44,19 @@ namespace TraderBoi
 
         public static DateTime lasttradesent = DateTime.Now;
 
+
         public static void CheckForTrade(List<Player> invited)
         {
+            int lowpriocount = 0;
+            foreach(Player p in invited)
+            {
+                if (2 < p.AmountOfTimesTradeCancelled)
+                    lowpriocount++;
+            }
             foreach (Player p in invited)
             {
+                if ((2 < p.AmountOfTimesTradeCancelled && lowpriocount < invited.Count) || 7 < p.AmountOfTimesTradeCancelled)
+                    continue;
                 if (p.InZone && !p.TradeCompleted &&  TradeThreadWorking == false)
                 {
                     TradeThreadWorking = true;
@@ -67,15 +76,29 @@ namespace TraderBoi
             {
                 if(p.InZone == false)
                 {
-                    /*
-                    Console.BackgroundColor = System.ConsoleColor.DarkRed;
-                    Console.WriteLine(DateTime.Now.ToString("hh:mm:ss") + " " + p.Name + " kicked from party they came to zone and left without trading.");
-                    Console.BackgroundColor = System.ConsoleColor.Black;*/
                     Maintenance.DumpInventory();
                     p.InZone = false;
                     TradeThreadWorking = false;
                     return;
                 }
+
+
+
+                int lowpriocount = 0;
+                foreach (Player c in Logic.invited)
+                {
+                    if (2 < c.AmountOfTimesTradeCancelled)
+                        lowpriocount++;
+                }
+                if ((2 < p.AmountOfTimesTradeCancelled && lowpriocount < Logic.invited.Count) || 7<p.AmountOfTimesTradeCancelled)
+                {
+                    Maintenance.DumpInventory();
+                    TradeThreadWorking = false;
+                    return;
+                }
+
+
+
                 if (140 < (DateTime.Now - p.InviteTime).TotalSeconds && !IsTradeSent() && !InTradeWith())
                 {
                     Console.BackgroundColor = System.ConsoleColor.DarkRed;
@@ -107,6 +130,7 @@ namespace TraderBoi
                     AutoItX.Send("{ENTER}");
                     AutoItX.Send("{CTRLDOWN}v{CTRLUP}");
                     AutoItX.Send("{ENTER}");
+                    p.AmountOfTimesTradeCancelled++;
                     Thread.Sleep(500);
                 }
 

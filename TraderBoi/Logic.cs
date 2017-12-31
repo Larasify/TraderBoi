@@ -30,10 +30,10 @@ namespace TraderBoi
             Maintenance.GetStock();
             InitialiseStartingStock();
 
-            Thread siter = new Thread(new ThreadStart(SiteSide.Getsite));
-            siter.Start();
             Thread reader = new Thread(new ThreadStart(ReaderThread));
             reader.Start();
+            Thread siter = new Thread(new ThreadStart(SiteSide.Getsite));
+            siter.Start();
 
             while (true)
             {
@@ -108,9 +108,9 @@ namespace TraderBoi
 
         public static void ReaderThread()
         {
-            Console.WriteLine("Starting reader Thread");
             using (FileStream fileStream = File.Open(PoELogPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
+                Console.WriteLine("Starting reader Thread");
                 fileStream.Seek(0, SeekOrigin.End);
                 using (StreamReader streamReader = new StreamReader(fileStream))
                 {

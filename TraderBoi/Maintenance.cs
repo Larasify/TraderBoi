@@ -139,10 +139,32 @@ namespace TraderBoi
                             c.InStock = c.InStock + p.MyCurrencyAmount;
                         }
                     }
-
                     invited.Remove(p);
                     continue;
                 }
+
+                if (7<p.AmountOfTimesTradeCancelled)
+                {
+                    Console.BackgroundColor = System.ConsoleColor.DarkRed;
+                    Console.WriteLine(DateTime.Now.ToString("hh:mm:ss") + " " + p.Name + " kicked from party because they cancelled trades 8 times");
+                    Console.BackgroundColor = System.ConsoleColor.Black;
+                    ClipboardManager.SetContents("/kick " + p.Name);
+                    AutoItX.Send("{ENTER}");
+                    AutoItX.Send("{CTRLDOWN}v{CTRLUP}");
+                    AutoItX.Send("{ENTER}");
+                    //I increase my currency back from when i invited them because the trade failed
+                    foreach (Currency c in Currency.CurrencyList)
+                    {
+                        if (c.CurrencyName == p.MyCurrencyName)
+                        {
+                            c.InStock = c.InStock + p.MyCurrencyAmount;
+                        }
+                    }
+                    invited.Remove(p);
+                    continue;
+                }
+
+
             }
             if (invited.Count < partylimit)
                 return 1;
