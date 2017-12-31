@@ -108,6 +108,7 @@ namespace TraderBoi
 
         public static void ReaderThread()
         {
+            Console.WriteLine("Starting reader Thread");
             using (FileStream fileStream = File.Open(PoELogPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 fileStream.Seek(0, SeekOrigin.End);
