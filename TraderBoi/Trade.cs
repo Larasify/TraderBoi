@@ -60,7 +60,7 @@ namespace TraderBoi
 
         private static void TradeThread(Player p)
         {
-            lasttradesent = DateTime.Now;
+            lasttradesent = DateTime.MinValue;
             GetMyCurrencyFromStash(p.MyCurrencyName, p.MyCurrencyAmount);
             GetCurrencyWorking = false;
             while (true)
@@ -322,7 +322,7 @@ namespace TraderBoi
                 results = ImageSearcher.UseImageSearch(image, "15", "0x00ff00");
                 if (results != null)
                 {
-                    Thread.Sleep(2500);
+                    Thread.Sleep(2500); // might be overkill :shrug: 
                     results = ImageSearcher.UseImageSearch(image, "15", "0x00ff00");
 
                 }
