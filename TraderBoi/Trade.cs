@@ -60,16 +60,17 @@ namespace TraderBoi
 
         private static void TradeThread(Player p)
         {
+            lasttradesent = DateTime.Now;
             GetMyCurrencyFromStash(p.MyCurrencyName, p.MyCurrencyAmount);
             GetCurrencyWorking = false;
-            lasttradesent = DateTime.Now;
             while (true)
             {
                 if(p.InZone == false)
                 {
+                    /*
                     Console.BackgroundColor = System.ConsoleColor.DarkRed;
                     Console.WriteLine(DateTime.Now.ToString("hh:mm:ss") + " " + p.Name + " kicked from party they came to zone and left without trading.");
-                    Console.BackgroundColor = System.ConsoleColor.Black;
+                    Console.BackgroundColor = System.ConsoleColor.Black;*/
                     Maintenance.DumpInventory();
                     p.InZone = false;
                     TradeThreadWorking = false;
