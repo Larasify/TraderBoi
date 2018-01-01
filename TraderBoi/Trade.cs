@@ -294,7 +294,7 @@ namespace TraderBoi
                         AutoItX.Send("{SPACE}");
                         return;
                     }
-                    if(CurrencyNeededLeft == 1)
+                    if(CurrencyNeededLeft == 1 && c.InStock==0)
                     {
                         AutoItX.Send("{CTRLDOWN}");
                         AutoItX.MouseClick("LEFT");
