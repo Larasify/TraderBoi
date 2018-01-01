@@ -35,6 +35,8 @@ namespace TraderBoi
         public static int CancelButtonY1 = int.Parse(AppSettings["CancelButtonY1"]);
         public static int CancelButtonX2 = int.Parse(AppSettings["CancelButtonX2"]);
         public static int CancelButtonY2 = int.Parse(AppSettings["CancelButtonY2"]);
+        public static int AmountCancelledBeforeLowPrio = int.Parse(AppSettings["AmountCancelledBeforeLowPrio"]);
+        public static int AmountCancelledBeforeKick = int.Parse(AppSettings["AmountCancelledBeforeKick"]);
 
         public static Boolean TradeHasBeenCanceled = false;
 
@@ -50,12 +52,12 @@ namespace TraderBoi
             int lowpriocount = 0;
             foreach(Player p in invited)
             {
-                if (2 < p.AmountOfTimesTradeCancelled)
+                if (AmountCancelledBeforeLowPrio < p.AmountOfTimesTradeCancelled)
                     lowpriocount++;
             }
             foreach (Player p in invited)
             {
-                if ((2 < p.AmountOfTimesTradeCancelled && lowpriocount < invited.Count) || 7 < p.AmountOfTimesTradeCancelled)
+                if ((AmountCancelledBeforeLowPrio < p.AmountOfTimesTradeCancelled && lowpriocount < invited.Count) || AmountCancelledBeforeKick < p.AmountOfTimesTradeCancelled)
                     continue;
                 if (p.InZone && !p.TradeCompleted &&  TradeThreadWorking == false)
                 {
@@ -87,10 +89,10 @@ namespace TraderBoi
                 int lowpriocount = 0;
                 foreach (Player c in Logic.invited)
                 {
-                    if (2 < c.AmountOfTimesTradeCancelled)
+                    if (AmountCancelledBeforeLowPrio < c.AmountOfTimesTradeCancelled)
                         lowpriocount++;
                 }
-                if ((2 < p.AmountOfTimesTradeCancelled && lowpriocount < Logic.invited.Count) || 7<p.AmountOfTimesTradeCancelled)
+                if ((AmountCancelledBeforeLowPrio < p.AmountOfTimesTradeCancelled && lowpriocount < Logic.invited.Count) || AmountCancelledBeforeKick < p.AmountOfTimesTradeCancelled)
                 {
                     Maintenance.DumpInventory();
                     TradeThreadWorking = false;
@@ -290,6 +292,15 @@ namespace TraderBoi
                         AutoItX.Send("{SPACE}");
                         return;
                     }
+                    if(CurrencyNeededLeft == 1)
+                    {
+                        AutoItX.Send("{CTRLDOWN}");
+                        AutoItX.MouseClick("LEFT");
+                        AutoItX.Send("{CTRLUP}");
+                        CurrencyNeededLeft = CurrencyNeededLeft - 1;
+                        AutoItX.Send("{SPACE}");
+                        return;
+                    }
                     AutoItX.Send("{SHIFTDOWN}");
                     AutoItX.MouseClick("LEFT");
                     AutoItX.Send("{SHIFTUP}");
@@ -300,21 +311,6 @@ namespace TraderBoi
                     {
                         for (int j = 0; j < 5; j++)
                         {
-                            /*
-                            SetProcessDPIAware();
-                            Rectangle b;
-                            GetWindowRect(GetForegroundWindow(), out b);
-
-                            OUtside
-                                    [DllImport("user32.dll")]
-                            private static extern bool SetProcessDPIAware();
-                            [DllImport("user32.dll")]
-                            static extern IntPtr GetForegroundWindow();
-                            [DllImport("user32.dll")]
-                            [return: MarshalAs(UnmanagedType.Bool)]
-                             static extern bool GetWindowRect(IntPtr hWnd, out Rectangle lpRect);
-                            */
-
                             Rectangle b =  AutoItX.WinGetPos("[ACTIVE]");
 
                             int xCoord1 = InventoryStartX1 + (i * InventoryStep) + b.Left + 7;

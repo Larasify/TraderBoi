@@ -143,7 +143,7 @@ namespace TraderBoi
                     continue;
                 }
 
-                if (7<p.AmountOfTimesTradeCancelled)
+                if (int.Parse(AppSettings["AmountCancelledBeforeKick"]) < p.AmountOfTimesTradeCancelled)
                 {
                     Console.BackgroundColor = System.ConsoleColor.DarkRed;
                     Console.WriteLine(DateTime.Now.ToString("hh:mm:ss") + " " + p.Name + " kicked from party because they cancelled trades 8 times");
