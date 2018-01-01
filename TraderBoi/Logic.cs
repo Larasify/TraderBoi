@@ -37,7 +37,7 @@ namespace TraderBoi
 
             while (true)
             {
-                Thread.Sleep(TimeSpan.FromSeconds(0.3));
+                Thread.Sleep(300);
                 Maintenance.CheckPotential(potential);
                 if(Maintenance.CheckInvited(invited) == 1)
                 {

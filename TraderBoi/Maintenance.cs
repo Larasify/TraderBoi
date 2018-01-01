@@ -195,8 +195,8 @@ namespace TraderBoi
                 {
                     return;
                 }
-                while(2 < (DateTime.Now - potential[i].MessageTime).TotalSeconds)
-                {
+                while ((DateTime.Now - potential[i].MessageTime).TotalSeconds < 2)
+                { 
                     Thread.Sleep(2000);
                 }
                 ClipboardManager.SetContents("/invite " + potential[i].Name);
@@ -215,7 +215,6 @@ namespace TraderBoi
                         c.InStock = c.InStock - potential[i].MyCurrencyAmount;
                     }
                 }
-
                 potential[i].InviteTime = DateTime.Now;
                 invited.Add(potential[i]);
                 potential.RemoveAt(i);
