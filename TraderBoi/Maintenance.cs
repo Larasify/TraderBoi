@@ -269,10 +269,14 @@ namespace TraderBoi
             AutoItX.MouseMove(StashX, StashY, 2);
             AutoItX.MouseClick("LEFT");
             Thread.Sleep(rnd.Next(280, 350));
+            int emptyspotsinarow = 0;
             for (int i = 0; i < 12; i++)
             {
+                Trade.CancelAllIncomingTrades();
                 for (int j = 0; j < 5; j++)
                 {
+                    if (emptyspotsinarow == 15)
+                        break;
                     Rectangle b = AutoItX.WinGetPos("[ACTIVE]");
 
                     int xCoord1 = InventoryStartX1 + (i * InventoryStep) + b.Left + 7;
@@ -288,6 +292,11 @@ namespace TraderBoi
                         AutoItX.Send("{CTRLDOWN}");
                         AutoItX.MouseClick("LEFT");
                         AutoItX.Send("{CTRLUP}");
+                        emptyspotsinarow = 0;
+                    }
+                    else
+                    {
+                        emptyspotsinarow++;
                     }
                 }
             }
