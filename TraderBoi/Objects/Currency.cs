@@ -51,7 +51,7 @@ namespace TraderBoi
             CurrencyList.Add(new Currency("divine", 10, "Divine Orb",15));
             CurrencyList.Add(new Currency("vaal", 10, "Vaal Orb",16)); //15
             CurrencyList.Add(new Currency("bauble", 20, "Glassblower's Bauble",20));
-            CurrencyList.Add(new Currency("silver", 30, "Silver Coin",26));
+            CurrencyList.Add(new Currency("silver", 30, "Silver Coin",35));
             CurrencyList.Add(new Currency("wisdom", 40, "Scroll of Wisdom",17)); //18
             CurrencyList.Add(new Currency("apprentice sextant", 10, "Apprentice Cartographer's Sextant",45));
             CurrencyList.Add(new Currency("journeyman sextant", 10, "Journeyman Cartographer's Sextant",46));

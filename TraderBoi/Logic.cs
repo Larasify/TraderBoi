@@ -189,7 +189,10 @@ namespace TraderBoi
                             }
                             if (line.Contains("Trade cancelled."))
                             {
-                                Trade.TradeHasBeenCanceled = true;
+                                if (0 < Trade.DeclinedIncomingTradeCount)
+                                    Trade.DeclinedIncomingTradeCount--;
+                                else
+                                    Trade.TradeHasBeenCanceled = true;
                             }
                         }
                     }

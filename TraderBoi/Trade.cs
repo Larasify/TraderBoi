@@ -46,6 +46,8 @@ namespace TraderBoi
 
         public static DateTime lasttradesent = DateTime.Now;
 
+        public static int DeclinedIncomingTradeCount = 0;
+
 
         public static void CheckForTrade(List<Player> invited)
         {
@@ -346,6 +348,7 @@ namespace TraderBoi
             {
                 AutoItX.MouseMove(int.Parse(results[1])-b.Left, int.Parse(results[2])-b.Top);
                 AutoItX.MouseClick("LEFT");
+                DeclinedIncomingTradeCount++;
                 results = ImageSearcher.UseImageSearch(image, "15", "0x00ff00");
                 if (results != null)
                 {
