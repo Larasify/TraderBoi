@@ -256,7 +256,10 @@ namespace TraderBoi
             {
                 return null;
             }
-            return new ItemStack(AllLines[1], int.Parse(AllLines[3].Substring(AllLines[3].LastIndexOf("e: ") + 3, AllLines[3].LastIndexOf("/") - (AllLines[3].LastIndexOf("e: ") + 3))));
+            if (AllLines[3].Contains("e: ") && AllLines[3].Contains("/"))
+                return new ItemStack(AllLines[1], int.Parse(AllLines[3].Substring(AllLines[3].LastIndexOf("e: ") + 3, AllLines[3].LastIndexOf("/") - (AllLines[3].LastIndexOf("e: ") + 3))));
+            else
+                return null;
         }
 
         public static void DumpInventory()

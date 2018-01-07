@@ -122,6 +122,13 @@ namespace TraderBoi
                         {
                             if (line.Contains("Hi, I'd like to buy your ") && line.Contains(" for my ") && line.Contains(" in "))
                             {
+                                Regex regex = new Regex("@From", RegexOptions.IgnoreCase);
+                                MatchCollection matches = regex.Matches(line);
+                                int fromcount = matches.Count;
+                                if (1 < fromcount)
+                                {
+                                    continue;
+                                }
                                 String[] FirstSplit = line.Split(new string[] { "Hi, I'd like to buy your " },StringSplitOptions.None);
                                 String[] SecondSplit = FirstSplit[1].Split(new string[] { " for my " }, StringSplitOptions.None);
                                 String[] ThirdSplit = SecondSplit[1].Split(new string[] { " in " }, StringSplitOptions.None);

@@ -52,7 +52,7 @@ namespace TraderBoi
         public static void CheckForTrade(List<Player> invited)
         {
             int lowpriocount = 0;
-            foreach(Player p in invited)
+            foreach (Player p in invited)
             {
                 if (AmountCancelledBeforeLowPrio < p.AmountOfTimesTradeCancelled)
                     lowpriocount++;
@@ -61,7 +61,7 @@ namespace TraderBoi
             {
                 if ((AmountCancelledBeforeLowPrio < p.AmountOfTimesTradeCancelled && lowpriocount < invited.Count) || AmountCancelledBeforeKick < p.AmountOfTimesTradeCancelled)
                     continue;
-                if (p.InZone && !p.TradeCompleted &&  TradeThreadWorking == false)
+                if (p.InZone && !p.TradeCompleted && TradeThreadWorking == false)
                 {
                     TradeThreadWorking = true;
 
@@ -78,7 +78,7 @@ namespace TraderBoi
             GetCurrencyWorking = false;
             while (true)
             {
-                if(p.InZone == false)
+                if (p.InZone == false)
                 {
                     Maintenance.DumpInventory();
                     p.InZone = false;
@@ -146,9 +146,9 @@ namespace TraderBoi
         {
             TradeHasBeenCanceled = false;
             String TheirIngameName = null;
-            foreach(Currency c in Currency.CurrencyList)
+            foreach (Currency c in Currency.CurrencyList)
             {
-                if(p.TheirCurrencyName == c.CurrencyName)
+                if (p.TheirCurrencyName == c.CurrencyName)
                 {
                     TheirIngameName = c.IngameName;
                 }
@@ -156,6 +156,7 @@ namespace TraderBoi
 
             int emptyspotsinarow = 0;
             // PUT MY SHIT
+            Maintenance.DumpingInventory = true;
             for (int i = 0; i < 12; i++)
             {
                 CancelAllIncomingTrades();
@@ -181,10 +182,23 @@ namespace TraderBoi
                         }
                         Thread.Sleep(rnd.Next(35, 85));
                         AutoItX.MouseMove(InventoryStartX1 + (i * InventoryStep) + 15, InventoryStartY1 + (j * InventoryStep) + 15, 2);
-                        AutoItX.Send("{CTRLDOWN}");
-                        AutoItX.MouseClick("LEFT");
-                        AutoItX.Send("{CTRLUP}");
-                        emptyspotsinarow = 0;
+                        ClipboardManager.SetEmpty();
+                        AutoItX.Send("{CTRLDOWN}c{CTRLUP}");
+                        ItemStack a = Maintenance.GetCurrencyFromClipboard();
+                        if (a != null)
+                        {
+                            foreach (Currency co in Currency.CurrencyList)
+                            {
+                                if (co.IngameName == a.ItemName && co.CurrencyName == p.MyCurrencyName)
+                                {
+                                    AutoItX.Send("{CTRLDOWN}");
+                                    AutoItX.MouseClick("LEFT");
+                                    AutoItX.Send("{CTRLUP}");
+                                    Thread.Sleep(rnd.Next(220, 260));
+                                }
+                            }
+                            emptyspotsinarow = 0;
+                        }
                     }
                     else
                     {
@@ -192,15 +206,17 @@ namespace TraderBoi
                     }
                 }
             }
+            Maintenance.DumpingInventory = false;
+            AutoItX.MouseMove(629, 383, 2);
             //CHECK FOR THEIR SHIT
             int AmountTheyPut = 0;
             while (AmountTheyPut < p.TheirCurrencyAmount)
             {
-                    if (TradeAltered() || !InTradeWith())
-                    {
-                        AutoItX.Send("{SPACE}");
-                        return false;
-                    }
+                if (TradeAltered() || !InTradeWith())
+                {
+                    AutoItX.Send("{SPACE}");
+                    return false;
+                }
                 AmountTheyPut = 0;
                 for (int i = 0; i < 12; i++)
                 {
@@ -239,7 +255,7 @@ namespace TraderBoi
                 return false;
             }
             AutoItX.MouseClick("LEFT");
-            while(true)
+            while (true)
             {
                 if (TradeAltered())
                 {
@@ -287,14 +303,14 @@ namespace TraderBoi
                         AutoItX.MouseClick("LEFT");
                         AutoItX.Send("{CTRLUP}");
                         CurrencyNeededLeft = CurrencyNeededLeft - c.StackLimit;
-                        Thread.Sleep(rnd.Next(150, 210));
+                        Thread.Sleep(rnd.Next(220, 260));
                     }
                     if (CurrencyNeededLeft == 0)
                     {
                         AutoItX.Send("{SPACE}");
                         return;
                     }
-                    if(CurrencyNeededLeft == 1 && c.InStock==0)
+                    if (CurrencyNeededLeft == 1 && c.InStock == 0)
                     {
                         AutoItX.Send("{CTRLDOWN}");
                         AutoItX.MouseClick("LEFT");
@@ -313,7 +329,7 @@ namespace TraderBoi
                     {
                         for (int j = 0; j < 5; j++)
                         {
-                            Rectangle b =  AutoItX.WinGetPos("[ACTIVE]");
+                            Rectangle b = AutoItX.WinGetPos("[ACTIVE]");
 
                             int xCoord1 = InventoryStartX1 + (i * InventoryStep) + b.Left + 7;
                             int yCoord1 = InventoryStartY1 + (j * InventoryStep) + b.Top;
@@ -321,11 +337,11 @@ namespace TraderBoi
                             int yCoord2 = InventoryStartY2 + (j * InventoryStep) + b.Top;
 
                             string image = ("img/empty.png");
-                            string[] results = ImageSearcher.UseImageSearchArea(xCoord1,yCoord1,xCoord2,yCoord2, image, "15", "0x00ff00");
+                            string[] results = ImageSearcher.UseImageSearchArea(xCoord1, yCoord1, xCoord2, yCoord2, image, "15", "0x00ff00");
                             if (results != null)
                             {
-                               
-                                AutoItX.MouseMove(InventoryStartX1 + (i * InventoryStep)+15, InventoryStartY1 + (j * InventoryStep)+15, 4);
+
+                                AutoItX.MouseMove(InventoryStartX1 + (i * InventoryStep) + 15, InventoryStartY1 + (j * InventoryStep) + 15, 4);
                                 AutoItX.MouseClick("LEFT");
                                 Thread.Sleep(500);
                                 AutoItX.Send("{SPACE}");
@@ -344,9 +360,9 @@ namespace TraderBoi
             Rectangle b = AutoItX.WinGetPos("[ACTIVE]");
             string image = ("img/decline.png");
             string[] results = ImageSearcher.UseImageSearch(image, "15", "0x00ff00");
-            while(results != null)
+            while (results != null)
             {
-                AutoItX.MouseMove(int.Parse(results[1])-b.Left, int.Parse(results[2])-b.Top);
+                AutoItX.MouseMove(int.Parse(results[1]) - b.Left, int.Parse(results[2]) - b.Top);
                 AutoItX.MouseClick("LEFT");
                 DeclinedIncomingTradeCount++;
                 results = ImageSearcher.UseImageSearch(image, "15", "0x00ff00");
@@ -400,7 +416,7 @@ namespace TraderBoi
             else
                 return true;
         }
-        
+
 
     }
 }
