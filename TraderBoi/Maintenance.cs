@@ -291,11 +291,25 @@ namespace TraderBoi
                     string[] results = ImageSearcher.UseImageSearchArea(xCoord1, yCoord1, xCoord2, yCoord2, image, "15", "0x00ff00");
                     if (results == null)
                     {
+                        Thread.Sleep(rnd.Next(35, 85));
                         AutoItX.MouseMove(InventoryStartX1 + (i * InventoryStep) + 15, InventoryStartY1 + (j * InventoryStep) + 15, 2);
-                        AutoItX.Send("{CTRLDOWN}");
-                        AutoItX.MouseClick("LEFT");
-                        AutoItX.Send("{CTRLUP}");
-                        emptyspotsinarow = 0;
+                        ClipboardManager.SetEmpty();
+                        AutoItX.Send("{CTRLDOWN}c{CTRLUP}");
+                        ItemStack a = GetCurrencyFromClipboard();
+                        if (a != null)
+                        {
+                            foreach (Currency co in Currency.CurrencyList)
+                            {
+                                if (co.IngameName == a.ItemName)
+                                {
+                                    AutoItX.Send("{CTRLDOWN}");
+                                    AutoItX.MouseClick("LEFT");
+                                    AutoItX.Send("{CTRLUP}");
+                                    Thread.Sleep(rnd.Next(220, 260));
+                                }
+                            }
+                            emptyspotsinarow = 0;
+                        }
                     }
                     else
                     {
