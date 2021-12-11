@@ -65,7 +65,6 @@ namespace TraderBoi
                 if(int.TryParse(AppSettings[c.CurrencyName + "Limit"],out int n))
                     c.Limit = int.Parse(AppSettings[c.CurrencyName + "Limit"]);
             }
-
         }
 
     }

@@ -229,10 +229,9 @@ namespace TraderBoi
             Random rnd = new Random();
             AutoItX.Send("{SPACE}");
             Thread.Sleep(rnd.Next(280,350));
-            AutoItX.AutoItSetOption("MouseCoordMode", 0);
             AutoItX.MouseMove(StashX, StashY, 2);
             AutoItX.MouseClick("LEFT");
-            Thread.Sleep(rnd.Next(280, 350));
+            Thread.Sleep(rnd.Next(500, 630));
             foreach (Currency c in Currency.CurrencyList)
             {
                 AutoItX.MouseMove(c.StashX, c.StashY, 5);
@@ -243,7 +242,7 @@ namespace TraderBoi
                 {
                     c.InStock = a.ItemAmount;
                 }
-                Thread.Sleep(rnd.Next(100, 120));
+                Thread.Sleep(rnd.Next(140, 160));
             }
             AutoItX.Send("{SPACE}");
  
@@ -293,6 +292,7 @@ namespace TraderBoi
                     {
                         Thread.Sleep(rnd.Next(35, 85));
                         AutoItX.MouseMove(InventoryStartX1 + (i * InventoryStep) + 15, InventoryStartY1 + (j * InventoryStep) + 15, 2);
+                        Thread.Sleep(rnd.Next(55, 65));
                         ClipboardManager.SetEmpty();
                         AutoItX.Send("{CTRLDOWN}c{CTRLUP}");
                         ItemStack a = GetCurrencyFromClipboard();

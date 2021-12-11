@@ -17,24 +17,19 @@ namespace TraderBoi
         public static List<Player> potential = new List<Player>();
         public static List<Player> invited = new List<Player>();
 
-        public static string PoELogPath = ConfigurationManager.AppSettings["PoELogPath"];
+        public static string PoELogPath = ConfigurationManager.AppSettings["PoEPath"]+"logs/client.txt";
+        public static string PoEExePath = ConfigurationManager.AppSettings["PoEPath"] + "PathOfExile.exe";
 
         public static int LastStockWritten = 6;
         public static double ChaosChanges = 0;
         public static List<int> startingstock = new List<int>();
 
+        public static DateTime lastrelaunch = DateTime.Now;
+
         public static void MainLogic()
         {
-            //INITIALISATIONS
-            Currency.InitialiseCurrencyList();
-            Maintenance.GetStock();
+            lastrelaunch = DateTime.Now;
             InitialiseStartingStock();
-
-            Thread reader = new Thread(new ThreadStart(ReaderThread));
-            reader.Start();
-            Thread siter = new Thread(new ThreadStart(SiteSide.Getsite));
-            siter.Start();
-
             while (true)
             {
                 Thread.Sleep(300);
@@ -45,11 +40,15 @@ namespace TraderBoi
                 }
                 Trade.CheckForTrade(invited);
                 WriteCurrentStockChanges();
-
+                if (1800 < (DateTime.Now - lastrelaunch).TotalSeconds)
+                {
+                    ReLaunchGame();
+                    lastrelaunch = DateTime.Now;
+                }
             }
         }
 
-        private static void InitialiseStartingStock()
+        public static void InitialiseStartingStock()
         {
             foreach(Currency c in Currency.CurrencyList)
             {
@@ -110,19 +109,28 @@ namespace TraderBoi
         {
             using (FileStream fileStream = File.Open(PoELogPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
+                Console.BackgroundColor = System.ConsoleColor.DarkBlue;
                 Console.WriteLine("Starting reader Thread");
+                Console.BackgroundColor = System.ConsoleColor.Black;
                 fileStream.Seek(0, SeekOrigin.End);
                 using (StreamReader streamReader = new StreamReader(fileStream))
                 {
                     while (true)
                     {
-                        Thread.Sleep(TimeSpan.FromSeconds(0.5));
+                        Thread.Sleep(500);
                         string line = streamReader.ReadLine();
+                        if (AutoItX.WinExists("Path of") == 0)
+                        {
+                            Console.BackgroundColor = System.ConsoleColor.DarkBlue;
+                            Console.WriteLine("Closing reader thread because the game is closed");
+                            Console.BackgroundColor = System.ConsoleColor.Black;
+                            return;
+                        }
                         if (line != null)
                         {
                             if (line.Contains("Hi, I'd like to buy your ") && line.Contains(" for my ") && line.Contains(" in "))
                             {
-                                Regex regex = new Regex("@From", RegexOptions.IgnoreCase);
+                                Regex regex = new Regex("@", RegexOptions.IgnoreCase);
                                 MatchCollection matches = regex.Matches(line);
                                 int fromcount = matches.Count;
                                 if (1 < fromcount)
@@ -201,10 +209,65 @@ namespace TraderBoi
                                 else
                                     Trade.TradeHasBeenCanceled = true;
                             }
+                            if (line.Contains("Relaunch"))
+                            {
+                                ReLaunchGame();
+                                Console.BackgroundColor = System.ConsoleColor.DarkBlue;
+                                Console.WriteLine("Closing reader thread because the game is closed");
+                                Console.BackgroundColor = System.ConsoleColor.Black;
+                                return;
+                            }
                         }
                     }
                 }
             }
+        }
+
+        public static void ReLaunchGame()
+        {
+            if (AutoItX.WinExists("Path of") == 1) { 
+                potential.Clear();
+                invited.Clear();
+                AutoItX.WinClose("Path of");
+                Thread.Sleep(90000);
+            }
+            Thread siter = new Thread(new ThreadStart(SiteSide.Getsite));
+            siter.Start();
+            AutoItX.Run(PoEExePath, "");
+            AutoItX.WinWait("Path of", "", 10);
+            if (AutoItX.WinActive("Path of") == 0)
+                AutoItX.WinActivate("Path of");
+            Thread.Sleep(5000);
+            while (ImageSearcher.UseImageSearch("img/login.png", "15", "0x00ff00") == null)
+            {
+                Thread.Sleep(500);
+            }
+            AutoItX.MouseMove(int.Parse(ConfigurationManager.AppSettings["LoginX"]), int.Parse(ConfigurationManager.AppSettings["LoginY"]), 2);
+            AutoItX.MouseClick("LEFT");
+            while (ImageSearcher.UseImageSearch("img/characterselect.png", "15", "0x00ff00") == null)
+            {
+                Thread.Sleep(500);
+            }
+            AutoItX.MouseMove(int.Parse(ConfigurationManager.AppSettings["PlayX"]), int.Parse(ConfigurationManager.AppSettings["PlayY"]), 2);
+            AutoItX.MouseClick("LEFT");
+            while (ImageSearcher.UseImageSearch("img/ingame.png", "15", "0x00ff00") == null)
+            {
+                Thread.Sleep(500);
+            }
+            AutoItX.Send("{ENTER}");
+            AutoItX.Send("/hideout");
+            AutoItX.Send("{ENTER}");
+            Thread.Sleep(5000);
+            while (ImageSearcher.UseImageSearch("img/ingame.png", "15", "0x00ff00") == null)
+            {
+                Thread.Sleep(500);
+            }
+            AutoItX.MouseMove(int.Parse(ConfigurationManager.AppSettings["InitialStashX"]), int.Parse(ConfigurationManager.AppSettings["InitialStashY"]), 2);
+            AutoItX.MouseClick("LEFT");
+            Thread.Sleep(3000);
+            Maintenance.GetStock();
+            Thread reader = new Thread(new ThreadStart(ReaderThread));
+            reader.Start();
         }
     }
 }

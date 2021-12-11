@@ -182,6 +182,7 @@ namespace TraderBoi
                         }
                         Thread.Sleep(rnd.Next(35, 85));
                         AutoItX.MouseMove(InventoryStartX1 + (i * InventoryStep) + 15, InventoryStartY1 + (j * InventoryStep) + 15, 2);
+                        Thread.Sleep(rnd.Next(55, 65));
                         ClipboardManager.SetEmpty();
                         AutoItX.Send("{CTRLDOWN}c{CTRLUP}");
                         ItemStack a = Maintenance.GetCurrencyFromClipboard();
